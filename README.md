@@ -25,7 +25,8 @@ query / resume ──► same encoder ──► cosine similarity (dot product) 
 - **`jobmatch/data.py`** loads postings from Hugging Face (`lukebarousse/data_jobs`) or any CSV, and samples evenly across job categories
 - **`jobmatch/embed.py`** wraps the embedding model, with a TF-IDF keyword backend kept as the baseline
 - **`jobmatch/search.py`** holds the vector index: semantic search, location filter, resume skill extraction and re-ranking
-- **`api.py`** is the FastAPI service (`/search`, `/match`, `/health`)
+- **`api.py`** is the FastAPI service (`/search`, `/match`, `/match-file` for PDF uploads, `/health`)
+- **`static/index.html`** is the web UI: search by description, or upload a resume to see matching jobs with the skills you have and the ones you're missing
 - **`eval/evaluate.py`** measures precision@10 and MRR, embeddings vs the keyword baseline
 
 ## Run it
@@ -40,8 +41,10 @@ python scripts/search.py "machine learning" --location India -k 5
 python scripts/search.py --resume my_resume.txt          # plain-text resume
 
 python eval/evaluate.py                                  # embeddings vs keyword baseline
-uvicorn api:app --reload                                 # http://127.0.0.1:8000/docs
+uvicorn api:app --reload                                 # web UI at http://127.0.0.1:8000, API docs at /docs
 ```
+
+On Windows you can also double-click `start.bat`: it starts the server and opens the web UI.
 
 Use your own data with `--source csv --path data/jobs.csv`. The CSV needs a `title` column;
 `company`, `location`, `skills`, `description` and `category` are used when present.
@@ -58,10 +61,12 @@ dataset's own category labels. Results on 5,000 postings:
 | all-MiniLM-L6-v2 embeddings | **0.582** | 0.776 |
 
 What this shows:
-- Embeddings return more relevant jobs in the top 10 (+3.7 points precision@10), most clearly on
-  queries that describe work rather than list tools (e.g. *"turn business data into dashboards"*: 1.00 vs 0.30).
-- Keyword search wins when the query names the exact tools (*"Excel and Tableau"*, *"PyTorch"*), and puts
-  its first hit slightly higher (MRR).
+- Embeddings return more relevant jobs in the top 10 overall (+3.7 points precision@10) and win 7 of
+  11 queries, most clearly on technical work descriptions (*"train neural networks with PyTorch and build
+  MLOps pipelines"*: 0.90 vs 0.40; *"deploy and serve deep learning models"*: 0.90 vs 0.60).
+- Keyword search wins 3 queries (one ties), mostly business-language ones where words like *dashboards*, *stakeholders* and
+  *requirements* map directly onto job titles (*"turn business data into dashboards"*: 1.00 vs 0.30), and
+  puts its first hit slightly higher (MRR).
 - This dataset has titles and skill tags but no job descriptions, which limits what embeddings can
   pick up. Next steps: hybrid search (combine both scores) and indexing full descriptions.
 
