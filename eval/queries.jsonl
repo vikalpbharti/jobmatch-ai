@@ -1,0 +1,11 @@
+{"category": "Data Engineer", "query": "build and maintain ETL pipelines and a cloud data warehouse"}
+{"category": "Data Engineer", "query": "stream processing with Kafka and Spark, orchestrate jobs in Airflow"}
+{"category": "Data Analyst", "query": "turn business data into dashboards and reports for stakeholders"}
+{"category": "Data Analyst", "query": "write SQL queries and build Excel and Tableau reports on sales performance"}
+{"category": "Data Scientist", "query": "build predictive models and run statistical experiments"}
+{"category": "Data Scientist", "query": "apply regression, classification and A/B testing to product questions"}
+{"category": "Machine Learning Engineer", "query": "deploy and serve deep learning models in production"}
+{"category": "Machine Learning Engineer", "query": "train neural networks with PyTorch and build MLOps pipelines"}
+{"category": "Business Analyst", "query": "gather requirements from stakeholders and improve business processes"}
+{"category": "Software Engineer", "query": "write backend services and REST APIs in Java or Python"}
+{"category": "Cloud Engineer", "query": "manage AWS and Azure infrastructure with Terraform and Kubernetes"}
