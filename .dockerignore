@@ -1,0 +1,9 @@
+.venv/
+.git/
+index/
+index_*/
+__pycache__/
+*.pyc
+*.log
+*.err
+start.bat
